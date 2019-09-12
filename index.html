@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title> DOM </title>
+		<meta charset="utf-8">
+	</head>
+	<body>
+		<style type="text/css">
+
+			* {
+				box-sizing: border-box;
+			}
+
+			.menu,
+			.secondmenu {
+				width: 100px;
+				padding: 0;
+				margin: 0;
+				list-style: none;
+			}
+
+			.menu li {
+				vertical-align: top;
+				width: 100%;
+				position: relative;
+				
+			}
+
+			.menu a {
+				background-color: white;
+				display: block;
+				padding: 5px;
+				border: 1px solid grey;
+				border-bottom: 0;
+				text-align: center;
+				text-decoration: none;
+				color: black;
+			}
+
+			.menu a:hover {
+				background-color: black;
+				color: white;
+			}
+
+			.secondmenu {
+				display: none;
+				position: absolute;
+				left: 100%;
+				top: 0;
+			}
+  
+  			.block ul {
+				display:block;
+			}
+
+			li:last-child {
+				border-bottom: 1px solid grey;
+			}
+			button {
+				border-radius: 50%;
+				height: 60px;
+			}
+		</style>
+
+		<script>
+
+			const arrMenu = [
+				{ innerText: 'Google 1',
+				  linkTo: 'https://www.google.com.ua',
+				  innerClass: 'menu'
+				},
+				{ innerText : 'Google 2',
+				  linkTo: 'https://www.google.com.ua',
+				  innerClass: 'menu'
+				},
+				{ innerText: 'Google 3',
+				  linkTo: 'https://www.google.com.ua',
+				  innerClass: 'menu'
+				},
+				{ innerText: 'Item 4',
+				  innerClass: 'menu',
+				  innerItems : [
+						{innerText: 'Item 4.1',
+						 innerClass: 'secondmenu',
+						},
+						{innerText: 'Item 4.2',
+						 innerClass: 'secondmenu',
+						},
+						{innerText: 'Item 4.3',
+						 innerClass: 'secondmenu',
+						}
+				  ],
+				},
+				{innerText: 'Item 5',
+				 innerClass: 'menu'
+				},
+				{innerText: 'Item 6',
+				innerClass: 'menu',
+				innerItems : [
+					{innerText: 'Item 6.1 ',
+					 innerClass: 'secondmenu',
+					},
+					{innerText: 'Item 6.2 ',
+					 innerClass: 'secondmenu',
+					 innerItems : [
+						{innerText: 'Item 6.2.1',
+						 innerClass: 'secondmenu'},
+						{innerText: 'Item 6.2.2',
+						 innerClass: 'secondmenu',},
+						{innerText: 'Item 6.2.3',
+						 innerClass: 'secondmenu'},
+						{innerText: 'Item 6.2.4',
+						 innerClass: 'secondmenu'}
+					 ]
+					}
+				]
+				}];
+		
+				
+					const listBuild = (arr, parent) => {
+						
+						const newUl = document.createElement('ul');
+
+						arr.forEach (item => {
+							const newLi = document.createElement('li');
+							const newA = document.createElement('a');
+
+					 		item.linkTo ? newA.href = item.linkTo :  newA.href = '#'; 
+							newA.innerText = item.innerText;
+							newLi.append(newA);
+
+							if(item.innerItems) listBuild(item.innerItems,newLi);
+													
+							newUl.classList = item.innerClass;
+							newUl.append(newLi);  
+						});
+
+						parent ? parent.append(newUl) : document.body.append(newUl);
+					};
+
+			listBuild(arrMenu);
+		 
+						
+			const $li =  document.querySelectorAll('li');
+			const $al =  document.querySelectorAll('a');
+			
+			function isExit () {
+			   	let answer = confirm('Are you sure you want to switch to Google?');
+			  	if(answer) {
+			  		window.location.href = event.target.href;
+			  	}
+			}
+		
+			$al.forEach(item => {
+			  	item.addEventListener('click', function(event) {
+			 	  	event.preventDefault();
+			 	  	if (event.target.getAttribute('href') != '#') isExit();
+				});
+			}); 
+			
+			$li.forEach(item => {
+				item.addEventListener('click', function(event) {
+				  	let child = this.children;
+				  	if (child.length > 1) {
+					  	child =  Array.prototype.slice.call(child);
+					  	child.findIndex( (item) => {
+					  		if (item.nodeName === 'UL')	this.classList.add('block');
+				  		});
+				  	}	
+				});
+		 	}); 
+
+		</script>
+	</body>
+
+
+
+
+</html>
